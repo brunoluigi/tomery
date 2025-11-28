@@ -1,0 +1,170 @@
+# Tomery - AI Agent Rules
+
+You are an AI assistant helping develop Tomery, a Ruby on Rails 8.1 application.
+
+## About Tomery
+
+Tomery is an AI-powered kitchen companion that helps users eat better and cook more at home. The app uses AI to:
+
+- **Search recipes** using natural language (e.g., "quick weeknight dinners with chicken")
+- **Build a personal cookbook** where users save and organize their favorite recipes
+- **Plan meals** for the week with AI-suggested meals based on preferences
+- **Generate shopping lists** automatically from meal plans
+- **Filter by dietary needs** including allergies, diets, cuisines, and cooking time
+
+The name "Tomery" comes from combining "tomato" 🍅 with a friendly suffix, representing fresh, home-cooked food.
+
+## ⚠️ IMPORTANT: Verification After Changes
+
+**After making ANY code changes, you MUST run the following checks:**
+
+```bash
+# 1. Run the test suite
+bin/rspec
+
+# 2. Run Rubocop for style/lint issues
+bin/rubocop
+
+# 3. Run Brakeman for security vulnerabilities
+bin/brakeman --no-pager
+```
+
+**All three checks must pass before considering a change complete.** If any check fails:
+1. Fix the issues immediately
+2. Re-run the failing check
+3. Continue until all checks pass
+
+For Rubocop issues, you can auto-fix many with `bin/rubocop -a`.
+
+## Technology Stack
+
+- **Framework**: Ruby on Rails 8.1 with Ruby 3.4
+- **Database**: PostgreSQL with pgvector extension
+- **Frontend**: Tailwind CSS 4, Hotwire (Turbo + Stimulus), RubyUI components
+- **Testing**: RSpec with FactoryBot, Faker, and Shoulda Matchers
+- **Authentication**: Devise with Google OAuth2
+- **AI/LLM**: RubyLLM gem for AI integrations
+- **Vector Search**: Neighbor gem for pgvector
+- **Deployment**: Kamal
+- **Code Quality**: Rubocop (Rails Omakase), Brakeman, bundler-audit
+
+## Code Style Guidelines
+
+### Ruby
+- Follow Rails Omakase conventions via rubocop-rails-omakase
+- Use frozen_string_literal comment at the top of all Ruby files
+- Prefer single quotes for strings unless interpolation is needed
+- Use keyword arguments for methods with more than 2 parameters
+- Keep methods under 15 lines when possible
+- Use meaningful variable and method names
+
+### Models
+- Always include validations
+- Use scopes for common queries
+- Keep callbacks minimal; prefer service objects for complex logic
+- Use concerns sparingly and only for truly shared behavior
+
+### Controllers
+- Keep controllers thin; delegate to service objects
+- Use before_action for authentication and authorization
+- Respond with appropriate HTTP status codes
+- Use strong parameters
+
+### Views
+- Prefer Phlex components (RubyUI) over ERB partials for reusable UI
+- Use Tailwind CSS utility classes
+- Keep view logic minimal; use helpers or presenters
+- Ensure accessibility (ARIA labels, semantic HTML)
+
+### Testing
+- Write specs for all models, controllers, and services
+- Use FactoryBot for test data
+- Use Shoulda Matchers for concise model specs
+- Follow AAA pattern (Arrange, Act, Assert)
+- Test edge cases and error conditions
+
+## File Structure
+
+```
+app/
+├── components/       # Phlex/RubyUI components
+├── controllers/      # Rails controllers
+├── helpers/          # View helpers
+├── jobs/            # Background jobs (Solid Queue)
+├── mailers/         # ActionMailer classes
+├── models/          # ActiveRecord models
+├── services/        # Service objects for business logic
+├── views/           # ERB templates
+└── javascript/      # Stimulus controllers
+```
+
+## Database Conventions
+
+- Use UUID primary keys for new tables when appropriate
+- Add indexes for foreign keys and frequently queried columns
+- Use database-level constraints where possible
+- Migrations should be reversible
+
+## Security
+
+- Never commit secrets or credentials
+- Use Rails credentials for sensitive configuration
+- Validate and sanitize all user input
+- Use parameterized queries (Rails default)
+- Run Brakeman before PRs
+
+## Git Conventions
+
+- Write meaningful commit messages
+- Use conventional commits format: type(scope): message
+- Keep commits atomic and focused
+- Branch naming: feature/*, bugfix/*, hotfix/*
+
+## Common Commands
+
+```bash
+# Development
+bin/dev                    # Start development server
+bin/rails console         # Rails console
+bin/rails db:migrate      # Run migrations
+
+# Testing
+bin/rspec                 # Run all tests
+bin/rspec spec/models     # Run model specs
+
+# Code Quality
+bin/rubocop               # Run Rubocop
+bin/rubocop -a            # Auto-fix issues
+bin/brakeman              # Security scan
+
+# Deployment
+bin/kamal deploy          # Deploy with Kamal
+```
+
+## Important Notes
+
+1. **Vector Search**: Use the `neighbor` gem with pgvector for semantic search. Models with vectors should include `has_neighbors :embedding`.
+
+2. **LLM Integration**: Configure RubyLLM in `config/initializers/ruby_llm.rb`. API keys should be in Rails credentials.
+
+3. **OAuth**: Google OAuth is configured via Devise. Update credentials with `google.client_id` and `google.client_secret`.
+
+4. **Components**: Use RubyUI components for consistent UI. Components live in `app/components/`.
+
+5. **Background Jobs**: Use Solid Queue for background processing. Jobs go in `app/jobs/`.
+
+## Agent Workflow
+
+When making changes to the codebase, follow this workflow:
+
+1. **Understand** - Read relevant files before making changes
+2. **Plan** - Consider the impact on tests and existing code
+3. **Implement** - Make the necessary changes
+4. **Test** - Write or update specs for new functionality
+5. **Verify** - Run the verification suite:
+   ```bash
+   bin/rspec && bin/rubocop && bin/brakeman --no-pager
+   ```
+6. **Fix** - Address any failures before completing
+
+**Never skip the verification step.** This ensures code quality and security.

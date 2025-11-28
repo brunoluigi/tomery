@@ -1,0 +1,41 @@
+# Omakase Ruby styling for Rails
+inherit_gem: { rubocop-rails-omakase: rubocop.yml }
+
+# Load additional plugins
+plugins:
+  - rubocop-rspec
+
+# RSpec configuration
+RSpec:
+  Enabled: true
+
+RSpec/ExampleLength:
+  Max: 20
+
+RSpec/MultipleExpectations:
+  Max: 5
+
+RSpec/NestedGroups:
+  Max: 4
+
+# Overwrite or add rules to create your own house style
+AllCops:
+  NewCops: enable
+  Exclude:
+    - "bin/**/*"
+    - "db/schema.rb"
+    - "node_modules/**/*"
+    - "vendor/**/*"
+    - "tmp/**/*"
+
+# Allow longer blocks in specs
+Metrics/BlockLength:
+  Exclude:
+    - "spec/**/*"
+    - "config/routes.rb"
+    - "config/environments/*"
+
+# Allow longer methods in migrations
+Metrics/MethodLength:
+  Exclude:
+    - "db/migrate/*"
